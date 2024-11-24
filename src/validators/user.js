@@ -56,5 +56,49 @@ module.exports = {
                 message: failedInputs
             };
         }
+    }, 
+    verifyUpdateUser: (user) => {
+        let validator = new Validator();
+        let userSchema = {
+            type: 'object',
+            properties: {
+                firstName: {
+                    type: 'string',
+                    minLength: 1,
+                    maxLength: 20,
+                    errorMessage: 'User firstname is missing or incorrect'
+                },
+                lastName: {
+                    type: 'string',
+                    minLength: 1,
+                    maxLength: 20,
+                    errorMessage: 'User lastname is missing or incorrect'
+                },
+                bio: {
+                    type: 'string',
+                    minLength: 6,
+                    errorMessage: 'Must be a longer Bio'
+                },
+                birth: {
+                    type: 'string',
+                    format: 'date',
+                    errorMessage: 'Please enter a birth date'
+                }
+            },
+        };
+        let result = validator.validate(user, userSchema);
+
+        // console.log('error => ', result)
+        // if validation failed
+        if (Array.isArray(result.errors) && result.errors.length) {
+            let failedInputs = '';
+
+            result.errors.forEach((error) => {
+                failedInputs += (error.schema.error || error.message) + ', ';
+            });
+            return {
+                message: failedInputs
+            };
+        }
     }
 };
