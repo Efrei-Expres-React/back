@@ -11,7 +11,7 @@ module.exports = {
 
             if (isNotValidateUser) {
                 res.status(400).send({
-                    error: isNotValidateUser.message
+                    message: isNotValidateUser.message
                 });
             } else {
                 // Prevent duplicates by looking for same mail
