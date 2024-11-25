@@ -5,11 +5,13 @@ const UserModel = require('../models/userModel');
 module.exports = {
     getMyInfos: async (req, res) => {
         try {
-            const {firstName, lastName, email } = req.user;
+            const {firstName, lastName, email, bio, birth } = req.user;
             res.send({
                 firstName,
                 lastName,
-                email
+                email, 
+                birth : new Date(birth).toISOString().slice(0, 10), 
+                bio
             });
         } catch (error) {
             res.status(500).send({
@@ -25,7 +27,7 @@ module.exports = {
 
             if (isNotValidateUser) {
                 res.status(400).send({
-                    error: isNotValidateUser.message
+                    message: isNotValidateUser.message
                 });
             } else {
                 // First argument : find by email
