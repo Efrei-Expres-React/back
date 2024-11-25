@@ -40,7 +40,7 @@ module.exports = {
                     errorMessage: 'Please enter a birth date'
                 }
             },
-            required: ['firstName', 'lastName', 'email', 'password']
+            required: ['firstname', 'lastname', 'email', 'password']
         };
         let result = validator.validate(user, userSchema);
 
@@ -62,13 +62,13 @@ module.exports = {
         let userSchema = {
             type: 'object',
             properties: {
-                firstName: {
+                firstname: {
                     type: 'string',
                     minLength: 1,
                     maxLength: 20,
                     errorMessage: 'User firstname is missing or incorrect'
                 },
-                lastName: {
+                lastname: {
                     type: 'string',
                     minLength: 1,
                     maxLength: 20,

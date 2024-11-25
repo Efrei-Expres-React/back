@@ -5,10 +5,10 @@ const UserModel = require('../models/userModel');
 module.exports = {
     getMyInfos: async (req, res) => {
         try {
-            const {firstName, lastName, email, bio, birth } = req.user;
+            const {firstname, lastname, email, bio, birth } = req.user;
             res.send({
-                firstName,
-                lastName,
+                firstname,
+                lastname,
                 email, 
                 birth : new Date(birth).toISOString().slice(0, 10), 
                 bio

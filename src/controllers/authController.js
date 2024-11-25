@@ -22,14 +22,14 @@ module.exports = {
                 }
 
                 newUser.password = await bcrypt.hash(newUser.password, 10);
-                const { id, lastName, firstName, email, bio } = await UserModel.create(newUser);
+                const { id, lastname, firstname, email, bio } = await UserModel.create(newUser);
 
                 res.send({
                     sucess: true,
                     user: {
                         id,
-                        lastName,
-                        firstName,
+                        lastname,
+                        firstname,
                         email,
                         bio
                     }
@@ -67,8 +67,8 @@ module.exports = {
             res.status(200).send({
                 message: 'Successfully logged in',
                 user: {
-                    firstname: user.firstName,
-                    lastname: user.lastName,
+                    firstname: user.firstname,
+                    lastname: user.lastname,
                     email: user.email,
                     token
                 }
