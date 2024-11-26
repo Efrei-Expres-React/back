@@ -1,6 +1,7 @@
 const express = require('express');
 const authRouter = require('./authRoute');
 const userRouter = require('./userRoute');
+const cvRouter = require('./cvRoute')
 
 const app = express();
 
@@ -17,6 +18,7 @@ const app = express();
 
 app.use('/auth', authRouter);
 app.use('/user', userRouter);
+app.use('/cv', cvRouter)
 
 
 module.exports = app;
