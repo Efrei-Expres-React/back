@@ -374,7 +374,7 @@ router.get('/getCVOfUser', cvController.getOneCV)
 
 /**
  * @swagger
- * /api/cv/getAllCVs:
+ * /api/cv/getAllCV:
  *   get:
  *     summary: Get all CVs
  *     description: Fetches all CV documents from the database.
