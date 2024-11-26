@@ -120,7 +120,8 @@ module.exports = {
     },
     deleteCVByTitleAndEmail: async (req, res) => {
         try {
-            const { email, title } = req.body;
+            const {email} = req.user
+            const { title } = req.body;
     
             // Find and delete the CV
             const deletedCV = await cvModel.findOneAndDelete({ email, title });
@@ -134,8 +135,7 @@ module.exports = {
     
             // Return a success response
             res.status(200).send({
-                message: `CV titled '${title}' for email '${email}' was successfully deleted.`,
-                deletedCV,
+                message: `CV titled '${title}' for email '${email}' was successfully deleted.`
             });
         } catch (error) {
             // Handle unexpected errors

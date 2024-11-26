@@ -12,20 +12,14 @@ const { verifyToken } = require('../middlewares/jwt');
 
 /**
  * @swagger
- * /create:
+ * /api/cv/create:
  *   post:
  *     summary: Create a new CV
  *     description: Creates a new CV associated with the authenticated user.
  *     tags:
  *       - CV Management API
- *     parameters:
- *       - in: header
- *         name: Authorization
- *         required: true
- *         schema:
- *           type: string
- *           example: Bearer <token>
- *         description: JWT token for authentication.
+ *     security:
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -423,6 +417,8 @@ router.get('/getAllCV', cvController.getAllCVs)
  *     description: Deletes a CV document from the database based on the provided title and email.
  *     tags: 
  *       - CV Management API
+ *     security:
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -430,13 +426,8 @@ router.get('/getAllCV', cvController.getAllCVs)
  *           schema:
  *             type: object
  *             required:
- *               - email
  *               - title
  *             properties:
- *               email:
- *                 type: string
- *                 description: The email associated with the CV to be deleted.
- *                 example: user@example.com
  *               title:
  *                 type: string
  *                 description: The title of the CV to be deleted.
@@ -451,77 +442,8 @@ router.get('/getAllCV', cvController.getAllCVs)
  *               properties:
  *                 message:
  *                   type: string
- *                   example: CV titled 'Frontend Developer CV' for email 'user@example.com' was successfully deleted.
- *                 deletedCV:
- *                   type: object
- *                   properties:
- *                     _id:
- *                       type: string
- *                       example: 645fcdf7c7e28
- *                     title:
- *                       type: string
- *                       example: Frontend Developer CV
- *                     visibility:
- *                       type: boolean
- *                       example: true
- *                     email:
- *                       type: string
- *                       example: user@example.com
- *                     description:
- *                       type: string
- *                       example: A detailed CV for a frontend developer role.
- *                     experienceScolaire:
- *                       type: array
- *                       items:
- *                         type: object
- *                         properties:
- *                           type:
- *                             type: string
- *                             example: Bachelor's Degree
- *                           lieuFormation:
- *                             type: string
- *                             example: University A
- *                           dateDebut:
- *                             type: string
- *                             format: date
- *                             example: 2015-09-01
- *                           dateFin:
- *                             type: string
- *                             format: date
- *                             example: 2019-06-30
- *                           description:
- *                             type: string
- *                             example: Studied Computer Science.
- *                     experienceProfessionnel:
- *                       type: array
- *                       items:
- *                         type: object
- *                         properties:
- *                           poste:
- *                             type: string
- *                             example: Frontend Developer
- *                           entreprise:
- *                             type: string
- *                             example: TechCorp
- *                           dateDebut:
- *                             type: string
- *                             format: date
- *                             example: 2020-01-01
- *                           dateFin:
- *                             type: string
- *                             format: date
- *                             example: 2022-12-31
- *                           missions:
- *                             type: array
- *                             items:
- *                               type: object
- *                               properties:
- *                                 titre:
- *                                   type: string
- *                                   example: Developed User Interfaces
- *                                 description:
- *                                   type: string
- *                                   example: Built responsive web applications.
+ *                   description: Successfull message.
+ *                   
  *       404:
  *         description: CV not found.
  *         content:
@@ -543,6 +465,6 @@ router.get('/getAllCV', cvController.getAllCVs)
  *                   type: string
  *                   example: An error occurred while deleting the CV.
  */
-router.delete('/deleteCVByTitleAndEmail', cvController.deleteCVByTitleAndEmail)
+router.delete('/deleteCVByTitleAndEmail',verifyToken ,cvController.deleteCVByTitleAndEmail)
 
 module.exports = router;
