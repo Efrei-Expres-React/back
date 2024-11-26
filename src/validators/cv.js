@@ -18,19 +18,13 @@ module.exports = {
                     maxLength: 200,
                     errorMessage: 'CV description is missing or incorrect'
                 },
-                email: {
-                    type: 'string',
-                    minLength: 1,
-                    maxLength: 30,
-                    errorMessage: 'email of creator is missing or incorrect'
-                },
                 visibility: {
                     type: 'boolean',
                     errorMessage: 'CV title is missing or incorrect'
                 }
 
             },
-            required: ['title', 'description', 'email', 'visibility']
+            required: ['title', 'description', 'visibility']
         };
         let result = validator.validate(cv, userSchema);
 

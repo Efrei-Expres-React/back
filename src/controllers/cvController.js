@@ -41,10 +41,10 @@ module.exports = {
             }
     
             // Créer le CV
-            const createdCv = await cvModel.create(newCV);
+            const createdCv = await cvModel.create({...newCV, email : email});
     
             // Préparer la réponse en filtrant les informations nécessaires
-            const { title, description, visibility, experienceScolaire, experienceProfessionnel } = createdCv;
+            const { title, description, visibility, experienceScolaire, experienceProfessionnel} = createdCv;
     
             res.status(201).send({
                 success: true,
