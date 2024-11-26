@@ -48,6 +48,7 @@ const cvSchema = new Schema(
                 ]
             }
         ],
+        recommendations: [{ type: mongoose.Schema.Types.ObjectId, ref: 'recommandation' }]
     },
     {
         timestamps: true
