@@ -200,5 +200,47 @@ module.exports = {
                 message: error.message || "An error occurred while fetching public CV titles.",
             });
         }
-    }    
+    },
+    getAllPublicCV: async (req, res) => {
+        try {
+
+            // Récupérer l'email de l'utilisateur depuis le JWT
+            const { email } = req.user;
+    
+            // Trouver l'utilisateur correspondant à l'email
+            const user = await UserModel.findOne({ email });
+            if (!user) {
+                return res.status(403).send({ message: "User not found." });
+            }
+
+            // Rechercher les CV avec `visibility: true` et récupérer les utilisateurs associés
+            const cvs = await cvModel.find({ visibility: true }).populate('userId', 'firstname lastname');
+    
+            // Vérifier si aucun CV public n'a été trouvé
+            if (!cvs || cvs.length === 0) {
+                return res.status(404).send({
+                    message: "No public CVs found.",
+                });
+            }
+    
+            // Préparer la réponse avec les titres des CV et les informations utilisateur
+            const cvTitles = cvs.map(cv => ({
+                cv: cv,
+                user: {
+                    firstname: cv.userId.firstname,
+                    lastname: cv.userId.lastname,
+                }
+            }));
+    
+            res.status(200).send({
+                message: "Public CV titles fetched successfully.",
+                cvs: cvTitles,
+            });
+        } catch (error) {
+            // Gérer les erreurs inattendues
+            res.status(500).send({
+                message: error.message || "An error occurred while fetching public CV titles.",
+            });
+        }
+    }     
 };
