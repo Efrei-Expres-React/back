@@ -160,8 +160,7 @@ module.exports = {
     
             // Return a success response
             res.status(200).send({
-                message: `CV titled '${title}' for email '${email}' was successfully deleted.`,
-                deletedCV,
+                message: `CV titled '${title}' for email '${email}' was successfully deleted.`
             });
         } catch (error) {
             // Handle unexpected errors
