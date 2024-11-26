@@ -5,15 +5,15 @@ const cvSchema = new Schema(
     {
         title: {
             type: String,
-            required: true,
-            unique: true
+            required: true
         },
         description: {
             type: String,
             required: true
         },
         email: {
-            type: String,
+            type: Schema.Types.String, 
+            ref: 'User',
             required: true
         },
         visibility : {

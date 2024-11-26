@@ -1,11 +1,16 @@
 const cvModel = require('../models/cvModel.js');
+const cv = require('../validators/cv');
 const { verifyCv } = require('../validators/cv');
 
 module.exports = {
     createCV: async (req, res) => {
         try {
+            const { email } = req.user;
             const newCV = req.body;
-            //TODO: verifier l'email du token et le comparer a l'email de la requete et a l'email de la base
+
+            //Copie de l'email du jwt token dans le CV
+            newCV.email = email;
+            
             const isNotValidCv = verifyCv(newCV);
 
             if (isNotValidCv) {
@@ -45,13 +50,17 @@ module.exports = {
             const { email } = req.body;
 
             // Fetch CVs with the specified email
-            const cvs = await cvModel.find({ email }, 'title'); // Only select the 'title' field
+            const cvs = await cvModel.find({ email });
 
-            // Extract titles from the result
-            const titles = cvs.map(cv => cv.title);
+            // If no CVs are found, return a 404 response
+            if (cvs.length === 0) {
+                return res.status(404).send({
+                    message: `No CVs found for email '${email}'.`,
+                });
+            }
 
-            // Send the titles as a response
-            res.status(200).send({ titles });
+            // Send all CVs as a response
+            res.status(200).send({ cvs });
 
         } catch(error) {
             res.status(500).send({
