@@ -106,7 +106,6 @@ module.exports = {
             });
         }
 
-        console.log(cv)
         // Send the CV details in the response
         res.status(200).send({ 
             cv
