@@ -90,4 +90,29 @@ router.post('/', verifyToken, recoController.createReco);
  */
 router.delete('/:id', verifyToken, recoController.deleteReco);
 
+/**
+ * @swagger
+ * /api/reco/:
+ *   get:
+ *     summary: Get all my recos
+ *     description: Get all my recommandation
+ *     tags:
+ *       - Recommandation
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User information retrieved successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *       400:
+ *         description: Bad request - Invalid input or missing required fields.
+ *       500:
+ *         description: Internal server error.
+ */
+router.get('/', verifyToken, recoController.getALlMyRecos);
+
+
 module.exports = router;

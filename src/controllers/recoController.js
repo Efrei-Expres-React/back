@@ -62,5 +62,42 @@ module.exports = {
                 message: error.message || 'Some error occurred while registering cv'
             });
         }
+    },
+    getALlMyRecos : async (req, res) => {
+        try {
+        const {_id} = req.user
+
+        if(!_id){
+            res.status(400).send({
+                message: "Reco ID is not provided"
+            });
+        }
+
+        const userId = new Types.ObjectId(_id);
+
+        const response = await recoModel.find({sender : userId}).populate([{
+            path: 'sender',  
+            select: 'firstname lastname email'
+          }, 
+            {
+                path: 'cv',  
+                select: 'title'  
+            }])
+
+        if(response.deletedCount === 0){
+            res.status(400).send({
+                message: "Recommandation not found"
+            });
+        }else{
+            res.status(200).send({
+                message: response
+            });
+        }
+
+        } catch (error) {
+            res.status(500).send({
+                message: error.message || 'Some error occurred while registering cv'
+            });
+        }
     }
 };
