@@ -295,11 +295,13 @@ router.get('/getAllCvOfUser', cvController.getAllCV)
 /**
  * @swagger
  * /api/cv/getCVOfUser:
- *   post:
- *     summary: Get a CV by title and email
+ *   get:
+ *     summary: Get myCvs
  *     description: Retrieves a single CV based on the provided title and email.
  *     tags: 
  *       - CV Management API
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
  *       - in: header
  *         name: Authorization
@@ -308,24 +310,6 @@ router.get('/getAllCvOfUser', cvController.getAllCV)
  *           type: string
  *           example: Bearer <token>
  *         description: JWT token for authentication.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - email
- *               - title
- *             properties:
- *               email:
- *                 type: string
- *                 description: The email associated with the CV.
- *                 example: user@example.com
- *               title:
- *                 type: string
- *                 description: The title of the CV.
- *                 example: Frontend Developer CV
  *     responses:
  *       200:
  *         description: Successfully retrieved the CV.
@@ -370,7 +354,7 @@ router.get('/getAllCvOfUser', cvController.getAllCV)
  *                   type: string
  *                   example: An error occurred while retrieving the CV.
  */
-router.get('/getCVOfUser', cvController.getOneCV)
+router.get('/getCVOfUser',verifyToken,cvController.getMyCV)
 
 /**
  * @swagger
