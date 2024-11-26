@@ -88,37 +88,35 @@ module.exports = {
             });
         }
     },
-    getOneCV : async (req, res) => {
+    getMyCV : async (req, res) => {
         try {
-            const { email, title } = req.body;
+            const {_id } = req.user;
 
-        // Fetch the CV with the given email and title
-        const cv = await cvModel.findOne({ email, title }).populate({
+            const cvId = new Types.ObjectId(_id);
+
+        // Fetch the CV with the given userId
+        const cv = await cvModel.find({ userId : cvId }).populate({
             path :"userId",
             select : "firstname lastname"
         });
-;
-
         // If no CV is found, return a 404 response
         if (!cv) {
             return res.status(404).send({
-                message: `CV with title '${title}' for email '${email}' not found.`,
+                message: `CV not found.`,
             });
         }
+
+        console.log(cv)
         // Send the CV details in the response
         res.status(200).send({ 
-            cv: {
-                title: cv.title,
-                visibility: cv.visibility,
-                email: cv.email,
-                description: cv.description,
-                experienceScolaire: cv.experienceScolaire,
-                experienceProfessionnel: cv.experienceProfessionnel,
-            },
+            cv
         });
 
         } catch (error) {
-
+            // Handle unexpected errors
+            res.status(500).send({
+                message: error.message || "An error occurred while fetching all CVs.",
+            });
         }
     },
     getAllCVs: async (req, res) => {
