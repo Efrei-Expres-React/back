@@ -5,20 +5,25 @@ const cvSchema = new Schema(
     {
         title: {
             type: String,
-            required: true
+            required: true,
+            unique: true
         },
         description: {
             type: String,
             required: true
         },
         email: {
-            type: Schema.Types.String, 
-            ref: 'User',
+            type: String,
             required: true
         },
         visibility : {
             type: Boolean,
             required: true
+        },
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User', // Nom du modèle lié
+            required: true,
         },
         experienceScolaire: [
             {

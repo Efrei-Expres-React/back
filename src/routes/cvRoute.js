@@ -12,7 +12,7 @@ const { verifyToken } = require('../middlewares/jwt');
 
 /**
  * @swagger
- * /create:
+ * /api/cv/create:
  *   post:
  *     summary: Create a new CV
  *     description: Creates a new CV associated with the authenticated user.
@@ -543,6 +543,68 @@ router.get('/getAllCV', cvController.getAllCVs)
  *                   type: string
  *                   example: An error occurred while deleting the CV.
  */
-router.delete('/deleteCVByTitleAndEmail', cvController.deleteCVByTitleAndEmail)
+router.delete('/deleteCVByTitleAndEmail', verifyToken, cvController.deleteCVByTitleAndEmail)
+
+/**
+ * @swagger
+ * /api/cv/getAllPublicCVTitles:
+ *   get:
+ *     summary: Retrieve all public CVs with user details
+ *     description: Fetches the titles of all public CVs along with the first name and last name of the associated user.
+ *     tags: 
+ *       - CV Management API
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved public CVs.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Public CV titles fetched successfully.
+ *                 cvs:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       title:
+ *                         type: string
+ *                         description: The title of the CV.
+ *                         example: Software Developer CV
+ *                       user:
+ *                         type: object
+ *                         properties:
+ *                           firstname:
+ *                             type: string
+ *                             description: The first name of the user associated with the CV.
+ *                             example: John
+ *                           lastname:
+ *                             type: string
+ *                             description: The last name of the user associated with the CV.
+ *                             example: Doe
+ *       404:
+ *         description: No public CVs found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: No public CVs found.
+ *       500:
+ *         description: Server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: An error occurred while fetching public CV titles.
+ */
+router.get('/getPublicVisibleCV', cvController.getAllPublicCVTitles)
 
 module.exports = router;
