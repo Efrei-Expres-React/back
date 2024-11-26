@@ -119,7 +119,10 @@ module.exports = {
     getAllCVs: async (req, res) => {
         try {
             // Fetch all CVs from the database
-            const cvs = await cvModel.find();
+            const cvs = await cvModel.find().populate({
+                path :"userId",
+                select : "firstname lastname"
+            });
     
             // If no CVs are found, return a 404 response
             if (!cvs || cvs.length === 0) {
