@@ -115,4 +115,41 @@ router.delete('/:id', verifyToken, recoController.deleteReco);
 router.get('/', verifyToken, recoController.getALlMyRecos);
 
 
+/**
+ * @swagger
+ * /api/reco/{id}:
+ *   get:
+ *     summary: Get CV reco
+ *     description: Get recommandations from only one CV
+ *     tags:
+ *       - Recommandation
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the recommendation to delete
+ *     responses:
+ *       200:
+ *         description: User information retrieved successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Successfull message.
+ *       400:
+ *         description: Bad request - Invalid input or missing required fields.
+ *       500:
+ *         description: Internal server error.
+ */
+router.get('/:id', verifyToken, recoController.getCvRecomandations);
+
+
+
 module.exports = router;
