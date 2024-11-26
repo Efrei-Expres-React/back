@@ -63,7 +63,7 @@ module.exports = {
             });
         }
     },
-    getAllCVTitles : async (req, res) => {
+    getAllCV : async (req, res) => {
         try {
             const { email } = req.body;
 

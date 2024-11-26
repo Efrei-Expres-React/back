@@ -157,7 +157,7 @@ router.post('/create', verifyToken, cvController.createCV);
 
 /**
  * @swagger
- * /api/cv/getAllCvTitleOfUser:
+ * /api/cv/getAllCvOfUser:
  *   post:
  *     summary: Retrieve all CVs for a specific email
  *     description: Returns a list of all CVs associated with the specified email.
@@ -282,7 +282,7 @@ router.post('/create', verifyToken, cvController.createCV);
  *                   type: string
  *                   example: An error occurred while retrieving CVs.
  */
-router.get('/getAllCvTitleOfUser', cvController.getAllCVTitles)
+router.get('/getAllCvOfUser', cvController.getAllCV)
 
 /**
  * @swagger
