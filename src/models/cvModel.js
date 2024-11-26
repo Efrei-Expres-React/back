@@ -20,6 +20,11 @@ const cvSchema = new Schema(
             type: Boolean,
             required: true
         },
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User', // Nom du modèle lié
+            required: true,
+        },
         experienceScolaire: [
             {
                 type: { type: String, required: true },
