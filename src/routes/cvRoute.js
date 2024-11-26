@@ -12,12 +12,20 @@ const { verifyToken } = require('../middlewares/jwt');
 
 /**
  * @swagger
- * /create:
+ * /api/cv/create:
  *   post:
  *     summary: Create a new CV
- *     description: Creates a new CV document in the database with the provided details.
- *     tags: 
+ *     description: Creates a new CV associated with the authenticated user.
+ *     tags:
  *       - CV Management API
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: Bearer <token>
+ *         description: JWT token for authentication.
  *     requestBody:
  *       required: true
  *       content:
@@ -27,24 +35,21 @@ const { verifyToken } = require('../middlewares/jwt');
  *             required:
  *               - title
  *               - description
- *               - email
  *               - visibility
+ *               - experienceScolaire
+ *               - experienceProfessionnel
  *             properties:
  *               title:
  *                 type: string
  *                 description: The title of the CV.
- *                 example: Frontend Developer CV
+ *                 example: Backend Developer CV
  *               description:
  *                 type: string
  *                 description: A brief description of the CV.
- *                 example: A detailed CV for a frontend developer role.
- *               email:
- *                 type: string
- *                 description: The email associated with the CV.
- *                 example: user@example.com
+ *                 example: Specialized in backend development using Node.js.
  *               visibility:
  *                 type: boolean
- *                 description: Visibility status of the CV.
+ *                 description: Whether the CV is public or private.
  *                 example: true
  *               experienceScolaire:
  *                 type: array
@@ -57,7 +62,7 @@ const { verifyToken } = require('../middlewares/jwt');
  *                       example: Bachelor's Degree
  *                     lieuFormation:
  *                       type: string
- *                       example: University A
+ *                       example: University of Technology
  *                     dateDebut:
  *                       type: string
  *                       format: date
@@ -68,7 +73,7 @@ const { verifyToken } = require('../middlewares/jwt');
  *                       example: 2019-06-30
  *                     description:
  *                       type: string
- *                       example: Studied Computer Science.
+ *                       example: Major in Computer Science.
  *               experienceProfessionnel:
  *                 type: array
  *                 description: List of professional experiences.
@@ -77,10 +82,10 @@ const { verifyToken } = require('../middlewares/jwt');
  *                   properties:
  *                     poste:
  *                       type: string
- *                       example: Frontend Developer
+ *                       example: Backend Developer
  *                     entreprise:
  *                       type: string
- *                       example: TechCorp
+ *                       example: Tech Solutions Inc.
  *                     dateDebut:
  *                       type: string
  *                       format: date
@@ -88,22 +93,22 @@ const { verifyToken } = require('../middlewares/jwt');
  *                     dateFin:
  *                       type: string
  *                       format: date
- *                       example: 2022-12-31
+ *                       example: 2023-06-30
  *                     missions:
  *                       type: array
- *                       description: List of missions in the role.
+ *                       description: List of tasks during the role.
  *                       items:
  *                         type: object
  *                         properties:
  *                           titre:
  *                             type: string
- *                             example: Developed User Interfaces
+ *                             example: API Development
  *                           description:
  *                             type: string
- *                             example: Built responsive web applications.
+ *                             example: Designed and implemented REST APIs.
  *     responses:
  *       201:
- *         description: Successfully created the CV.
+ *         description: Successfully created a new CV.
  *         content:
  *           application/json:
  *             schema:
@@ -111,27 +116,24 @@ const { verifyToken } = require('../middlewares/jwt');
  *               properties:
  *                 message:
  *                   type: string
- *                   example: CV successfully created.
+ *                   example: CV created successfully.
  *                 cv:
  *                   type: object
  *                   properties:
- *                     _id:
- *                       type: string
- *                       example: 645fcdf7c7e28
  *                     title:
  *                       type: string
- *                       example: Frontend Developer CV
+ *                       example: Backend Developer CV
  *                     description:
  *                       type: string
- *                       example: A detailed CV for a frontend developer role.
- *                     email:
- *                       type: string
- *                       example: user@example.com
+ *                       example: Specialized in backend development using Node.js.
  *                     visibility:
  *                       type: boolean
  *                       example: true
- *       400:
- *         description: Invalid request data.
+ *                     email:
+ *                       type: string
+ *                       example: john.doe@example.com
+ *       401:
+ *         description: Unauthorized, invalid or missing token.
  *         content:
  *           application/json:
  *             schema:
@@ -139,7 +141,7 @@ const { verifyToken } = require('../middlewares/jwt');
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Missing required fields.
+ *                   example: Unauthorized access, token required.
  *       500:
  *         description: Server error.
  *         content:
@@ -151,15 +153,15 @@ const { verifyToken } = require('../middlewares/jwt');
  *                   type: string
  *                   example: An error occurred while creating the CV.
  */
-router.post('/create', cvController.createCV);
+router.post('/create', verifyToken, cvController.createCV);
 
 /**
  * @swagger
  * /api/cv/getAllCvTitleOfUser:
  *   post:
- *     summary: Get all CV titles for a given email
- *     description: Retrieves all CV titles associated with a specific email.
- *     tags: 
+ *     summary: Retrieve all CVs for a specific email
+ *     description: Returns a list of all CVs associated with the specified email.
+ *     tags:
  *       - CV Management API
  *     requestBody:
  *       required: true
@@ -172,23 +174,95 @@ router.post('/create', cvController.createCV);
  *             properties:
  *               email:
  *                 type: string
- *                 description: The email associated with the CVs.
+ *                 description: The email address to search CVs for.
  *                 example: user@example.com
  *     responses:
  *       200:
- *         description: Successfully retrieved all CV titles for the given email.
+ *         description: Successfully retrieved CVs.
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 titles:
+ *                 cvs:
  *                   type: array
+ *                   description: List of CVs associated with the email.
  *                   items:
- *                     type: string
- *                     example: Frontend Developer CV
+ *                     type: object
+ *                     properties:
+ *                       title:
+ *                         type: string
+ *                         description: The title of the CV.
+ *                         example: Frontend Developer CV
+ *                       description:
+ *                         type: string
+ *                         description: A brief description of the CV.
+ *                         example: A detailed CV for a frontend developer role.
+ *                       email:
+ *                         type: string
+ *                         description: The email associated with the CV.
+ *                         example: user@example.com
+ *                       visibility:
+ *                         type: boolean
+ *                         description: Visibility status of the CV.
+ *                         example: true
+ *                       experienceScolaire:
+ *                         type: array
+ *                         description: List of educational experiences.
+ *                         items:
+ *                           type: object
+ *                           properties:
+ *                             type:
+ *                               type: string
+ *                               example: Bachelor's Degree
+ *                             lieuFormation:
+ *                               type: string
+ *                               example: University A
+ *                             dateDebut:
+ *                               type: string
+ *                               format: date
+ *                               example: 2015-09-01
+ *                             dateFin:
+ *                               type: string
+ *                               format: date
+ *                               example: 2019-06-30
+ *                             description:
+ *                               type: string
+ *                               example: Studied Computer Science.
+ *                       experienceProfessionnel:
+ *                         type: array
+ *                         description: List of professional experiences.
+ *                         items:
+ *                           type: object
+ *                           properties:
+ *                             poste:
+ *                               type: string
+ *                               example: Frontend Developer
+ *                             entreprise:
+ *                               type: string
+ *                               example: TechCorp
+ *                             dateDebut:
+ *                               type: string
+ *                               format: date
+ *                               example: 2020-01-01
+ *                             dateFin:
+ *                               type: string
+ *                               format: date
+ *                               example: 2022-12-31
+ *                             missions:
+ *                               type: array
+ *                               description: List of missions in the role.
+ *                               items:
+ *                                 type: object
+ *                                 properties:
+ *                                   titre:
+ *                                     type: string
+ *                                     example: Developed User Interfaces
+ *                                   description:
+ *                                     type: string
+ *                                     example: Built responsive web applications.
  *       404:
- *         description: No CV titles found for the given email.
+ *         description: No CVs found for the given email.
  *         content:
  *           application/json:
  *             schema:
@@ -196,7 +270,7 @@ router.post('/create', cvController.createCV);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: No CV titles found for email 'user@example.com'.
+ *                   example: No CVs found for email 'user@example.com'.
  *       500:
  *         description: Server error.
  *         content:
@@ -206,7 +280,7 @@ router.post('/create', cvController.createCV);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: An error occurred while retrieving CV titles.
+ *                   example: An error occurred while retrieving CVs.
  */
 router.get('/getAllCvTitleOfUser', cvController.getAllCVTitles)
 
@@ -469,6 +543,68 @@ router.get('/getAllCV', cvController.getAllCVs)
  *                   type: string
  *                   example: An error occurred while deleting the CV.
  */
-router.delete('/deleteCVByTitleAndEmail', cvController.deleteCVByTitleAndEmail)
+router.delete('/deleteCVByTitleAndEmail', verifyToken, cvController.deleteCVByTitleAndEmail)
+
+/**
+ * @swagger
+ * /api/cv/getAllPublicCVTitles:
+ *   get:
+ *     summary: Retrieve all public CVs with user details
+ *     description: Fetches the titles of all public CVs along with the first name and last name of the associated user.
+ *     tags: 
+ *       - CV Management API
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved public CVs.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Public CV titles fetched successfully.
+ *                 cvs:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       title:
+ *                         type: string
+ *                         description: The title of the CV.
+ *                         example: Software Developer CV
+ *                       user:
+ *                         type: object
+ *                         properties:
+ *                           firstname:
+ *                             type: string
+ *                             description: The first name of the user associated with the CV.
+ *                             example: John
+ *                           lastname:
+ *                             type: string
+ *                             description: The last name of the user associated with the CV.
+ *                             example: Doe
+ *       404:
+ *         description: No public CVs found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: No public CVs found.
+ *       500:
+ *         description: Server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: An error occurred while fetching public CV titles.
+ */
+router.get('/getPublicVisibleCV', cvController.getAllPublicCVTitles)
 
 module.exports = router;
