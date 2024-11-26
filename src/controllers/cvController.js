@@ -144,29 +144,24 @@ module.exports = {
     },
     deleteCVByTitleAndEmail: async (req, res) => {
         try {
-            const { email, title } = req.body;
+            const { id } = req.params;
+            const cvId = new Types.ObjectId(id);
             
-            const { user } = req.user;
+            const user = req.user;
 
-            if(user.email!==email){
-                return res.status(403).send({
-                    message: `CV with title '${title}' for email '${email}' not authorized for deletion.`,
-                });
-            }
-    
-            // Find and delete the CV
-            const deletedCV = await cvModel.findOneAndDelete({ email, title });
-    
+            const cvToDelete = await cvModel.findOneAndDelete({email : user.email, _id : cvId})
+
+
             // If no CV was found and deleted, return a 404 response
-            if (!deletedCV) {
+            if (!cvToDelete) {
                 return res.status(404).send({
-                    message: `No CV found with title '${title}' for email '${email}'.`,
+                    message: `No CV found with email '${user.email}' for id '${id}'.`,
                 });
             }
     
             // Return a success response
             res.status(200).send({
-                message: `CV titled '${title}' for email '${email}' was successfully deleted.`
+                message: `CV titled was successfully deleted.`
             });
         } catch (error) {
             // Handle unexpected errors
