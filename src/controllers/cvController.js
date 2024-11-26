@@ -65,7 +65,8 @@ module.exports = {
     },
     getAllCV : async (req, res) => {
         try {
-            const { email } = req.body;
+            // Récupérer l'email de l'utilisateur à partir du JWT
+            const { email } = req.user;
 
             // Fetch CVs with the specified email
             const cvs = await cvModel.find({ email });
@@ -242,5 +243,32 @@ module.exports = {
                 message: error.message || "An error occurred while fetching public CV titles.",
             });
         }
-    }     
+    }, 
+    updateCV: async (req, res) => {
+        try {
+            // Extract user information from the JWT
+            const { email } = req.user;
+    
+            // Extract CV ID and update data from the request
+            const { id } = req.params;
+            const updateData = req.body;
+    
+            // Find the CV by ID and email to ensure the user owns it
+            const cv = await cvModel.findOne({ _id: id, email });
+            if (!cv) {
+                return res.status(404).send({ message: "CV not found or you do not have permission to update it." });
+            }
+    
+            // Update the CV with the provided data
+            const updatedCV = await cvModel.findByIdAndUpdate(id, updateData, { new: true });
+    
+            res.status(200).send({
+                message: "CV updated successfully."
+            });
+        } catch (error) {
+            res.status(500).send({
+                message: error.message || "Some error occurred while updating the CV.",
+            });
+        }
+    }   
 };

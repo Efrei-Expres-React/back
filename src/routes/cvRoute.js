@@ -158,27 +158,24 @@ router.post('/create', verifyToken, cvController.createCV);
 /**
  * @swagger
  * /api/cv/getAllCvOfUser:
- *   post:
- *     summary: Retrieve all CVs for a specific email
- *     description: Returns a list of all CVs associated with the specified email.
+ *   get:
+ *     summary: Retrieve all CVs for the authenticated user
+ *     description: Fetches all CVs associated with the email extracted from the JWT token of the authenticated user.
  *     tags:
  *       - CV Management API
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - email
- *             properties:
- *               email:
- *                 type: string
- *                 description: The email address to search CVs for.
- *                 example: user@example.com
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: Bearer <token>
+ *         description: JWT token for authentication.
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Successfully retrieved CVs.
+ *         description: Successfully retrieved the CVs.
  *         content:
  *           application/json:
  *             schema:
@@ -186,21 +183,21 @@ router.post('/create', verifyToken, cvController.createCV);
  *               properties:
  *                 cvs:
  *                   type: array
- *                   description: List of CVs associated with the email.
+ *                   description: List of CVs associated with the authenticated user.
  *                   items:
  *                     type: object
  *                     properties:
  *                       title:
  *                         type: string
- *                         description: The title of the CV.
- *                         example: Frontend Developer CV
+ *                         description: Title of the CV.
+ *                         example: Software Developer CV
  *                       description:
  *                         type: string
- *                         description: A brief description of the CV.
- *                         example: A detailed CV for a frontend developer role.
+ *                         description: Description of the CV.
+ *                         example: Experienced in web development.
  *                       email:
  *                         type: string
- *                         description: The email associated with the CV.
+ *                         description: Email associated with the CV.
  *                         example: user@example.com
  *                       visibility:
  *                         type: boolean
@@ -214,20 +211,25 @@ router.post('/create', verifyToken, cvController.createCV);
  *                           properties:
  *                             type:
  *                               type: string
+ *                               description: Type of education.
  *                               example: Bachelor's Degree
  *                             lieuFormation:
  *                               type: string
- *                               example: University A
+ *                               description: Place of education.
+ *                               example: XYZ University
  *                             dateDebut:
  *                               type: string
  *                               format: date
- *                               example: 2015-09-01
+ *                               description: Start date of the education.
+ *                               example: 2018-09-01
  *                             dateFin:
  *                               type: string
  *                               format: date
- *                               example: 2019-06-30
+ *                               description: End date of the education.
+ *                               example: 2022-06-30
  *                             description:
  *                               type: string
+ *                               description: Description of the education.
  *                               example: Studied Computer Science.
  *                       experienceProfessionnel:
  *                         type: array
@@ -237,32 +239,38 @@ router.post('/create', verifyToken, cvController.createCV);
  *                           properties:
  *                             poste:
  *                               type: string
- *                               example: Frontend Developer
+ *                               description: Job title.
+ *                               example: Backend Developer
  *                             entreprise:
  *                               type: string
+ *                               description: Company name.
  *                               example: TechCorp
  *                             dateDebut:
  *                               type: string
  *                               format: date
- *                               example: 2020-01-01
+ *                               description: Start date of the job.
+ *                               example: 2022-07-01
  *                             dateFin:
  *                               type: string
  *                               format: date
- *                               example: 2022-12-31
+ *                               description: End date of the job.
+ *                               example: 2024-11-01
  *                             missions:
  *                               type: array
- *                               description: List of missions in the role.
+ *                               description: List of missions within the job.
  *                               items:
  *                                 type: object
  *                                 properties:
  *                                   titre:
  *                                     type: string
- *                                     example: Developed User Interfaces
+ *                                     description: Title of the mission.
+ *                                     example: Backend Development
  *                                   description:
  *                                     type: string
- *                                     example: Built responsive web applications.
+ *                                     description: Description of the mission.
+ *                                     example: Developed REST APIs for the client.
  *       404:
- *         description: No CVs found for the given email.
+ *         description: No CVs found for the authenticated user.
  *         content:
  *           application/json:
  *             schema:
@@ -280,7 +288,7 @@ router.post('/create', verifyToken, cvController.createCV);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: An error occurred while retrieving CVs.
+ *                   example: Some error occurred while getting CVs of user.
  */
 router.get('/getAllCvOfUser', cvController.getAllCV)
 
@@ -292,6 +300,14 @@ router.get('/getAllCvOfUser', cvController.getAllCV)
  *     description: Retrieves a single CV based on the provided title and email.
  *     tags: 
  *       - CV Management API
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: Bearer <token>
+ *         description: JWT token for authentication.
  *     requestBody:
  *       required: true
  *       content:
@@ -757,5 +773,155 @@ router.get('/getPublicVisibleCV', cvController.getAllPublicCVTitles)
  *                   example: An error occurred while fetching public CV titles.
  */
 router.get('/getAllPublicCV',verifyToken, cvController.getAllPublicCV)
+
+/**
+ * @swagger
+ * /api/cv/{id}:
+ *   put:
+ *     summary: Update a CV
+ *     description: Updates an existing CV owned by the authenticated user. The user must be authenticated using a Bearer token.
+ *     tags:
+ *       - CV Management API
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: Bearer <token>
+ *         description: JWT token for authentication.
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: 640f5b6d8f2c3b8d1c9d1e23
+ *         description: The ID of the CV to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: The updated title of the CV.
+ *                 example: Updated Software Developer CV
+ *               description:
+ *                 type: string
+ *                 description: The updated description of the CV.
+ *                 example: Updated description for the CV.
+ *               visibility:
+ *                 type: boolean
+ *                 description: The updated visibility status of the CV.
+ *                 example: false
+ *               experienceScolaire:
+ *                 type: array
+ *                 description: List of updated educational experiences.
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     type:
+ *                       type: string
+ *                       example: Master's Degree
+ *                     lieuFormation:
+ *                       type: string
+ *                       example: University B
+ *                     dateDebut:
+ *                       type: string
+ *                       format: date
+ *                       example: 2020-09-01
+ *                     dateFin:
+ *                       type: string
+ *                       format: date
+ *                       example: 2022-06-30
+ *                     description:
+ *                       type: string
+ *                       example: Studied Advanced Computer Science.
+ *               experienceProfessionnel:
+ *                 type: array
+ *                 description: List of updated professional experiences.
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     poste:
+ *                       type: string
+ *                       example: Full-Stack Developer
+ *                     entreprise:
+ *                       type: string
+ *                       example: TechCorp
+ *                     dateDebut:
+ *                       type: string
+ *                       format: date
+ *                       example: 2023-01-01
+ *                     dateFin:
+ *                       type: string
+ *                       format: date
+ *                       example: 2024-12-31
+ *                     missions:
+ *                       type: array
+ *                       description: List of updated missions in the role.
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           titre:
+ *                             type: string
+ *                             example: Developed API endpoints
+ *                           description:
+ *                             type: string
+ *                             example: Built scalable API endpoints for client use.
+ *     responses:
+ *       200:
+ *         description: Successfully updated the CV.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: CV updated successfully.
+ *                 cv:
+ *                   type: object
+ *                   description: The updated CV object.
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       example: 640f5b6d8f2c3b8d1c9d1e23
+ *                     title:
+ *                       type: string
+ *                       example: Updated Software Developer CV
+ *                     description:
+ *                       type: string
+ *                       example: Updated description for the CV.
+ *                     email:
+ *                       type: string
+ *                       example: user@example.com
+ *                     visibility:
+ *                       type: boolean
+ *                       example: false
+ *       404:
+ *         description: CV not found or user does not have permission to update it.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: CV not found or you do not have permission to update it.
+ *       500:
+ *         description: Server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Some error occurred while updating the CV.
+ */
+router.put('/update', verifyToken, cvController.updateCV )
 
 module.exports = router;
