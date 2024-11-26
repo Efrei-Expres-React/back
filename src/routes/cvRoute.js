@@ -924,4 +924,72 @@ router.get('/getAllPublicCV',verifyToken, cvController.getAllPublicCV)
  */
 router.put('/update', verifyToken, cvController.updateCV )
 
+/**
+ * @swagger
+ * /api/cv/one/{id}:
+ *   get:
+ *     summary: Get CV by Id
+ *     description: Fetches all CV documents from the database.
+ *     tags: 
+ *       - CV Management API
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the CV to retrieve
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved all CVs.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 cvs:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         example: 645fcdf7c7e28
+ *                       title:
+ *                         type: string
+ *                         example: Frontend Developer CV
+ *                       visibility:
+ *                         type: boolean
+ *                         example: true
+ *                       email:
+ *                         type: string
+ *                         example: user@example.com
+ *                       description:
+ *                         type: string
+ *                         example: A detailed CV for a frontend developer role.
+ *       404:
+ *         description: No CVs found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: No CVs found.
+ *       500:
+ *         description: Server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: An error occurred while fetching all CVs.
+ */
+router.get('/one/:id', verifyToken, cvController.getCvById)
+
 module.exports = router;

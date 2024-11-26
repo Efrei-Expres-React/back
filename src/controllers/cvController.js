@@ -2,6 +2,7 @@ const cvModel = require('../models/cvModel.js');
 const UserModel = require('../models/userModel');
 const cv = require('../validators/cv');
 const { verifyCv } = require('../validators/cv');
+const { Types } = require('mongoose');
 
 module.exports = {
     createCV: async (req, res) => {
@@ -92,7 +93,11 @@ module.exports = {
             const { email, title } = req.body;
 
         // Fetch the CV with the given email and title
-        const cv = await cvModel.findOne({ email, title });
+        const cv = await cvModel.findOne({ email, title }).populate({
+            path :"userId",
+            select : "firstname lastname"
+        });
+;
 
         // If no CV is found, return a 404 response
         if (!cv) {
@@ -273,5 +278,40 @@ module.exports = {
                 message: error.message || "Some error occurred while updating the CV.",
             });
         }
-    }   
+    },
+    getCvById : async (req, res) => {
+        try {
+            const {id } = req.params;
+
+            const cvId = new Types.ObjectId(id);
+
+        // Fetch the CV with the given email and title
+        const cv = await cvModel.findOne({ _id : cvId }).populate({
+            path :"userId",
+            select : "firstname lastname"
+        });
+        // If no CV is found, return a 404 response
+        if (!cv) {
+            return res.status(404).send({
+                message: `CV with title '${title}' for email '${email}' not found.`,
+            });
+        }
+        // Send the CV details in the response
+        res.status(200).send({ 
+            cv: {
+                title: cv.title,
+                visibility: cv.visibility,
+                email: cv.email,
+                firstname : cv.userId.firstname,
+                lastname : cv.userId.lastname,
+                description: cv.description,
+                experienceScolaire: cv.experienceScolaire,
+                experienceProfessionnel: cv.experienceProfessionnel,
+            },
+        });
+
+        } catch (error) {
+
+        }
+    },  
 };
