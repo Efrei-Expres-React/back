@@ -2,6 +2,7 @@ const cvModel = require('../models/cvModel.js');
 const UserModel = require('../models/userModel');
 const cv = require('../validators/cv');
 const { verifyCv } = require('../validators/cv');
+const { Types } = require('mongoose');
 
 module.exports = {
     createCV: async (req, res) => {
@@ -63,9 +64,10 @@ module.exports = {
             });
         }
     },
-    getAllCVTitles : async (req, res) => {
+    getAllCV : async (req, res) => {
         try {
-            const { email } = req.body;
+            // Récupérer l'email de l'utilisateur à partir du JWT
+            const { email } = req.user;
 
             // Fetch CVs with the specified email
             const cvs = await cvModel.find({ email });
@@ -91,7 +93,11 @@ module.exports = {
             const { email, title } = req.body;
 
         // Fetch the CV with the given email and title
-        const cv = await cvModel.findOne({ email, title });
+        const cv = await cvModel.findOne({ email, title }).populate({
+            path :"userId",
+            select : "firstname lastname"
+        });
+;
 
         // If no CV is found, return a 404 response
         if (!cv) {
@@ -118,7 +124,10 @@ module.exports = {
     getAllCVs: async (req, res) => {
         try {
             // Fetch all CVs from the database
-            const cvs = await cvModel.find();
+            const cvs = await cvModel.find().populate({
+                path :"userId",
+                select : "firstname lastname"
+            });
     
             // If no CVs are found, return a 404 response
             if (!cvs || cvs.length === 0) {
@@ -242,5 +251,67 @@ module.exports = {
                 message: error.message || "An error occurred while fetching public CV titles.",
             });
         }
-    }     
+    }, 
+    updateCV: async (req, res) => {
+        try {
+            // Extract user information from the JWT
+            const { email } = req.user;
+    
+            // Extract CV ID and update data from the request
+            const { id } = req.params;
+            const updateData = req.body;
+    
+            // Find the CV by ID and email to ensure the user owns it
+            const cv = await cvModel.findOne({ _id: id, email });
+            if (!cv) {
+                return res.status(404).send({ message: "CV not found or you do not have permission to update it." });
+            }
+    
+            // Update the CV with the provided data
+            const updatedCV = await cvModel.findByIdAndUpdate(id, updateData, { new: true });
+    
+            res.status(200).send({
+                message: "CV updated successfully."
+            });
+        } catch (error) {
+            res.status(500).send({
+                message: error.message || "Some error occurred while updating the CV.",
+            });
+        }
+    },
+    getCvById : async (req, res) => {
+        try {
+            const {id } = req.params;
+
+            const cvId = new Types.ObjectId(id);
+
+        // Fetch the CV with the given email and title
+        const cv = await cvModel.findOne({ _id : cvId }).populate({
+            path :"userId",
+            select : "firstname lastname"
+        });
+        // If no CV is found, return a 404 response
+        if (!cv) {
+            return res.status(404).send({
+                message: `CV with title '${title}' for email '${email}' not found.`,
+            });
+        }
+        // Send the CV details in the response
+        res.status(200).send({ 
+            cv: {
+                title: cv.title,
+                visibility: cv.visibility,
+                email: cv.email,
+                firstname : cv.userId.firstname,
+                lastname : cv.userId.lastname,
+                description: cv.description,
+                experienceScolaire: cv.experienceScolaire,
+                experienceProfessionnel: cv.experienceProfessionnel,
+            },
+        });
+
+        } catch (error) {
+
+        }
+    },  
 };
