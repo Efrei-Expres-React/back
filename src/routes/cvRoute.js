@@ -607,4 +607,155 @@ router.delete('/deleteCVByTitleAndEmail', verifyToken, cvController.deleteCVByTi
  */
 router.get('/getPublicVisibleCV', cvController.getAllPublicCVTitles)
 
+/**
+ * @swagger
+ * /api/cv/getAllPublicCV:
+ *   get:
+ *     summary: Retrieve all public CVs with detailed user and CV information
+ *     description: Fetches all public CVs along with the detailed user information (firstname and lastname) of the associated user.
+ *     tags: 
+ *       - CV Management API
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved public CVs.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Public CV titles fetched successfully.
+ *                 cvs:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       cv:
+ *                         type: object
+ *                         properties:
+ *                           title:
+ *                             type: string
+ *                             description: The title of the CV.
+ *                             example: Software Developer CV
+ *                           description:
+ *                             type: string
+ *                             description: A brief description of the CV.
+ *                             example: Experienced in web development.
+ *                           visibility:
+ *                             type: boolean
+ *                             description: Visibility status of the CV.
+ *                             example: true
+ *                           experienceScolaire:
+ *                             type: array
+ *                             description: List of educational experiences.
+ *                             items:
+ *                               type: object
+ *                               properties:
+ *                                 type:
+ *                                   type: string
+ *                                   description: Type of education.
+ *                                   example: Bachelor's Degree
+ *                                 lieuFormation:
+ *                                   type: string
+ *                                   description: Place of education.
+ *                                   example: XYZ University
+ *                                 dateDebut:
+ *                                   type: string
+ *                                   format: date
+ *                                   description: Start date of the education.
+ *                                   example: 2018-09-01
+ *                                 dateFin:
+ *                                   type: string
+ *                                   format: date
+ *                                   description: End date of the education.
+ *                                   example: 2022-06-30
+ *                                 description:
+ *                                   type: string
+ *                                   description: Description of the education.
+ *                                   example: Studied Computer Science.
+ *                           experienceProfessionnel:
+ *                             type: array
+ *                             description: List of professional experiences.
+ *                             items:
+ *                               type: object
+ *                               properties:
+ *                                 poste:
+ *                                   type: string
+ *                                   description: Job title.
+ *                                   example: Backend Developer
+ *                                 entreprise:
+ *                                   type: string
+ *                                   description: Company name.
+ *                                   example: TechCorp
+ *                                 dateDebut:
+ *                                   type: string
+ *                                   format: date
+ *                                   description: Start date of the job.
+ *                                   example: 2022-07-01
+ *                                 dateFin:
+ *                                   type: string
+ *                                   format: date
+ *                                   description: End date of the job.
+ *                                   example: 2024-11-01
+ *                                 missions:
+ *                                   type: array
+ *                                   description: List of missions within the job.
+ *                                   items:
+ *                                     type: object
+ *                                     properties:
+ *                                       titre:
+ *                                         type: string
+ *                                         description: Title of the mission.
+ *                                         example: Backend Development
+ *                                       description:
+ *                                         type: string
+ *                                         description: Description of the mission.
+ *                                         example: Developed REST APIs for the client.
+ *                       user:
+ *                         type: object
+ *                         properties:
+ *                           firstname:
+ *                             type: string
+ *                             description: The first name of the user associated with the CV.
+ *                             example: John
+ *                           lastname:
+ *                             type: string
+ *                             description: The last name of the user associated with the CV.
+ *                             example: Doe
+ *       403:
+ *         description: User not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User not found.
+ *       404:
+ *         description: No public CVs found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: No public CVs found.
+ *       500:
+ *         description: Server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: An error occurred while fetching public CV titles.
+ */
+router.get('/getAllPublicCV',verifyToken, cvController.getAllPublicCV)
+
 module.exports = router;
