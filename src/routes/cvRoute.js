@@ -417,30 +417,21 @@ router.get('/getAllCV', cvController.getAllCVs)
 
 /**
  * @swagger
- * /api/cv/deleteCVByTitleAndEmail:
+ * /api/cv/{id}:
  *   delete:
- *     summary: Delete a CV by title and email
- *     description: Deletes a CV document from the database based on the provided title and email.
+ *     summary: Delete a CV by id
+ *     description: Deletes a CV document from the database based on the token.
  *     tags: 
  *       - CV Management API
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - email
- *               - title
- *             properties:
- *               email:
- *                 type: string
- *                 description: The email associated with the CV to be deleted.
- *                 example: user@example.com
- *               title:
- *                 type: string
- *                 description: The title of the CV to be deleted.
- *                 example: Frontend Developer CV
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the CV to retrieve
  *     responses:
  *       200:
  *         description: Successfully deleted the CV.
@@ -543,7 +534,7 @@ router.get('/getAllCV', cvController.getAllCVs)
  *                   type: string
  *                   example: An error occurred while deleting the CV.
  */
-router.delete('/deleteCVByTitleAndEmail', verifyToken, cvController.deleteCVByTitleAndEmail)
+router.delete('/:id', verifyToken, cvController.deleteCVByTitleAndEmail)
 
 /**
  * @swagger
