@@ -596,7 +596,7 @@ router.delete('/:id', verifyToken, cvController.deleteCVByTitleAndEmail)
  *                   type: string
  *                   example: An error occurred while fetching public CV titles.
  */
-router.get('/getPublicVisibleCV', cvController.getAllPublicCVTitles)
+router.get('/getAllPublicCVTitles', cvController.getAllPublicCVTitles)
 
 /**
  * @swagger
