@@ -185,6 +185,7 @@ module.exports = {
             // Préparer la réponse avec les titres des CV et les informations utilisateur
             const cvTitles = cvs.map(cv => ({
                 title: cv.title,
+                createdAt : cv.createdAt,
                 user: {
                     firstname: cv.userId.firstname,
                     lastname: cv.userId.lastname,
