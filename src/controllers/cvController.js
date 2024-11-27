@@ -186,6 +186,7 @@ module.exports = {
             const cvTitles = cvs.map(cv => ({
                 title: cv.title,
                 createdAt : cv.createdAt,
+                _id : cv._id, 
                 user: {
                     firstname: cv.userId.firstname,
                     lastname: cv.userId.lastname,
