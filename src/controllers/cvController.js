@@ -245,7 +245,7 @@ module.exports = {
                 message: error.message || "An error occurred while fetching public CV titles.",
             });
         }
-    }, 
+    },
     updateCV: async (req, res) => {
         try {
             // Extract user information from the JWT
