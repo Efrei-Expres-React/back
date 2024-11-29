@@ -2,24 +2,32 @@
 
 Ce projet est une application backend construite avec **Node.js** et **Express** dans le cadre d'un cours de renforcement JS à l'école **EFREI**.
 
-## Lien de production
+---
 
-L'application est déployée sur Render et accessible à l'adresse suivante :
+## 🚀 Lien de production
 
-[https://back-efrei.onrender.com/](https://back-efrei.onrender.com/)
+L'application est déployée sur Render et accessible via ce lien :  
+👉 **[Accéder à l'application](https://back-efrei.onrender.com/)**
 
-## Documentation Swagger
+---
 
-La documentation API est disponible ici :
+## 📖 Documentation Swagger
 
-[https://back-efrei.onrender.com/api-docs/](https://back-efrei.onrender.com/api-docs/)
+Consultez la documentation API ici :  
+👉 **[Documentation Swagger](https://back-efrei.onrender.com/api-docs/)**
 
-## Prérequis
+---
 
-- [Node.js](https://nodejs.org) (version 22.11 recommandée)
+## 🛠 Prérequis
+
+Avant de commencer, assurez-vous d'avoir installé :
+
+- [Node.js](https://nodejs.org) (version **22.11** recommandée)
 - [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/)
 
-## Installation
+---
+
+## 📦 Installation
 
 1. Clonez ce dépôt :
    ```bash
@@ -34,14 +42,16 @@ La documentation API est disponible ici :
    yarn install
    ```
 
-3. Configurez les variables d'environnement :
-   - Copiez le fichier `.env.example` :
-     ```bash
-     cp .env.example .env
-     ```
-   - Modifiez le fichier `.env` avec vos valeurs spécifiques.
+3. Configurez les variables d'environnement :  
+   Copiez le fichier `.env.example` et renommez-le `.env` :
+   ```bash
+   cp .env.example .env
+   ```
+   Modifiez les valeurs dans `.env` selon vos besoins.
 
-## Commandes
+---
+
+## 🏃‍♂️ Commandes
 
 ### Lancer le serveur en mode développement
 ```bash
@@ -64,7 +74,9 @@ npm run build
 yarn build
 ```
 
-## Contribution
+---
+
+## 🤝 Contribution
 
 Merci aux contributeurs suivants :
 
