@@ -31,8 +31,8 @@ Avant de commencer, assurez-vous d'avoir installé :
 
 1. Clonez ce dépôt :
    ```bash
-   git clone https://github.com/username/repo-nodejs-express.git
-   cd repo-nodejs-express
+   git clone https://github.com/Efrei-Expres-React/back.git
+   cd back
    ```
 
 2. Installez les dépendances :
