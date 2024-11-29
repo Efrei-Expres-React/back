@@ -1,4 +1,3 @@
-
 # Projet Node.js avec Express
 
 Ce projet est une application backend construite avec **Node.js** et **Express** dans le cadre d'un cours de renforcement JS à l'école **EFREI**.
@@ -34,3 +33,57 @@ Avant de commencer, assurez-vous d'avoir installé :
    ```bash
    git clone https://github.com/username/repo-nodejs-express.git
    cd repo-nodejs-express
+   ```
+
+2. Installez les dépendances :
+   ```bash
+   npm install
+   # ou
+   yarn install
+   ```
+
+3. Configurez les variables d'environnement :  
+   Copiez le fichier `.env.example` et renommez-le `.env` :
+   ```bash
+   cp .env.example .env
+   ```
+   Modifiez les valeurs dans `.env` selon vos besoins.
+
+---
+
+## 🏃‍♂️ Commandes
+
+### Lancer le serveur en mode développement
+```bash
+npm run dev
+# ou
+yarn dev
+```
+
+### Lancer le serveur en mode production
+```bash
+npm start
+# ou
+yarn start
+```
+
+### Construire le projet pour la production
+```bash
+npm run build
+# ou
+yarn build
+```
+
+---
+
+## 🤝 Contribution
+
+Merci aux contributeurs suivants :
+
+- [Boris Price](https://github.com/Lowinne)
+- [Stevie Mache Voutsa](https://github.com/VoutsaStevie)
+- [Marie Espinosa](https://github.com/marieesss)
+
+---
+
+Fait avec ❤️ par l'équipe du projet.
