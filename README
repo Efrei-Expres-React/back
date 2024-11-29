@@ -1,16 +1,16 @@
 # Projet Node.js avec Express
 
-Ce projet est une application backend construite avec **Node.js** et **Express** dans le cadre d'un cours en renforcement JS au sein de l'école EFREI. 
+Ce projet est une application backend construite avec **Node.js** et **Express** dans le cadre d'un cours de renforcement JS à l'école **EFREI**.
 
 ## Lien de production
 
-Voici le lien de production :
+L'application est déployée sur Render et accessible à l'adresse suivante :
 
 [https://back-efrei.onrender.com/](https://back-efrei.onrender.com/)
 
 ## Documentation Swagger
 
-La documentation est accessible à l'adresse suivante une fois le serveur démarré :
+La documentation API est disponible ici :
 
 [https://back-efrei.onrender.com/api-docs/](https://back-efrei.onrender.com/api-docs/)
 
@@ -34,7 +34,12 @@ La documentation est accessible à l'adresse suivante une fois le serveur démar
    yarn install
    ```
 
-3. Reprendre le .env.example:
+3. Configurez les variables d'environnement :
+   - Copiez le fichier `.env.example` :
+     ```bash
+     cp .env.example .env
+     ```
+   - Modifiez le fichier `.env` avec vos valeurs spécifiques.
 
 ## Commandes
 
@@ -59,7 +64,6 @@ npm run build
 yarn build
 ```
 
-
 ## Contribution
 
 Merci aux contributeurs suivants :
@@ -67,7 +71,6 @@ Merci aux contributeurs suivants :
 - [Boris Price](https://github.com/Lowinne)
 - [Stevie Mache Voutsa](https://github.com/VoutsaStevie)
 - [Marie Espinosa](https://github.com/marieesss)
-
 
 ---
 
